@@ -4,9 +4,9 @@ import core.Constants;
 
 public class Board {
 
-    private int row;
-    private int col;
-    private Cell[][] cells;
+    private final int row;
+    private final int col;
+    private final Cell[][] cells;
 
     public Board(int row, int col, Cell[][] cells) {
         this.row = row;

@@ -1,5 +1,6 @@
 package AI;
 
+import core.Constants;
 import model.Node;
 
 import java.util.*;
@@ -7,19 +8,33 @@ import java.util.*;
 public class DFS extends SearchAlgo {
 
     @Override
-    public void search(Node startNode) {
+    public SearchResult search(Node startNode) {
+        return search(startNode, Integer.MAX_VALUE);
+    }
+
+    public SearchResult search(Node startNode, final int maxDepth) {
         Stack<Node> fringe = new Stack<>();
-        Set<Node> visitedNodes = new HashSet<>();
+        Map<Node, Integer> nodeDepths = new HashMap<>();
 
         if (startNode.isGoal()) {
-            System.out.println("score : " + startNode.sum);
-            printResult(startNode, 0);
-            return;
+            return buildResult(startNode);
         }
 
         fringe.push(startNode);
+        nodeDepths.put(startNode, 0);
+
+        int maxDepthTraversed = 0;
+
         while(!fringe.isEmpty()) {
             Node current = fringe.pop();
+            int depth = nodeDepths.get(current);
+            nodeDepths.remove(current);
+
+            maxDepthTraversed = Math.max(depth, maxDepthTraversed);
+
+            if(depth >= maxDepth) {
+                continue;
+            }
 
             List<Node> children = current.successor();
             Collections.reverse(children); // To convert to desired visit order
@@ -29,17 +44,18 @@ public class DFS extends SearchAlgo {
                     continue;
 
                 if(child.isGoal()) {
-                    printResult(child, 0);
-                    System.out.println(child.sum);
-                    return;
+                    return buildResult(child);
                 }
 
                 fringe.push(child);
+                nodeDepths.put(child, depth + 1);
             }
 
         }
 
-        System.out.println("no solution");
+        SearchResult result = SearchResult.failure();
+        result.setMaxDepthTraversed(maxDepthTraversed);
+        return result;
     }
 
 }

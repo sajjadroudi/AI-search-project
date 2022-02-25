@@ -1,11 +1,11 @@
 package model;
 
 public class Cell {
-    int row;
-    int col;
-    private int value;
-    private OPERATION_TYPE operationType;
-    public String op;
+    final int row;
+    final int col;
+    private final int value;
+    private final OPERATION_TYPE operationType;
+    public final String op;
     private static Cell start;
     private static Cell goal;
 

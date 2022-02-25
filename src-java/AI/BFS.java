@@ -9,14 +9,12 @@ import java.util.Queue;
 
 public class BFS extends SearchAlgo {
 
-    public void search(Node startNode) {
-        Queue<Node> frontier = new LinkedList<Node>();
+    public SearchResult search(Node startNode) {
+        Queue<Node> frontier = new LinkedList<>();
         Hashtable<String, Boolean> inFrontier = new Hashtable<>();
         Hashtable<String, Boolean> explored = new Hashtable<>();
         if (startNode.isGoal()) {
-            System.out.println("score : " + startNode.sum);
-            printResult(startNode, 0);
-            return;
+            return buildResult(startNode);
         }
         frontier.add(startNode);
         inFrontier.put(startNode.hash(), true);
@@ -28,9 +26,7 @@ public class BFS extends SearchAlgo {
             for (Node child : children) {
                 if (!inFrontier.containsKey(child.hash()) && !explored.containsKey(child.hash())) {
                     if (child.isGoal()) {
-                        printResult(child, 0);
-                        System.out.println(child.sum);
-                        return;
+                        return buildResult(child);
                     }
                     frontier.add(child);
                     inFrontier.put(child.hash(), true);
@@ -38,7 +34,7 @@ public class BFS extends SearchAlgo {
             }
         }
 
-        System.out.println("no solution");
+        return SearchResult.failure();
 
     }
 

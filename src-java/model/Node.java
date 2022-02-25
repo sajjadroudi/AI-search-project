@@ -8,29 +8,45 @@ import java.util.Hashtable;
 import java.util.Objects;
 
 public class Node {
-    public Board board;
-    public int sum = 0;
-    public Node parent;
-    public Cell currentCell;
-    private Cell[][] cells;
-    private int goalValue;
-    private Hashtable<String, Boolean> repeatedStates;
+    public final Board board;
+    public final int sum;
+    public final Node parent;
+    public final Cell currentCell;
+    private final Cell[][] cells;
+    private final int goalValue;
+    private final Hashtable<String, Boolean> repeatedStates;
 
-    public Node(Cell currentCell, int currentValue, int goalValue, Board board, Node parent, Hashtable<String, Boolean> repeated) {
+    private Node(Cell currentCell, int currentValue, int goalValue, Board board, Node parent, Hashtable<String, Boolean> repeated, boolean copy) {
         this.currentCell = currentCell;
         this.sum = currentValue;
         this.board = board;
         this.cells = board.getCells();
         this.parent = parent;
-        this.goalValue = goalValue;
-        Hashtable<String, Boolean> hashtableTemp = new Hashtable<String, Boolean>(repeated);
-        hashtableTemp.put(this.toString(), true);
-        this.repeatedStates = hashtableTemp;
-        setGoalValue();
 
-        repeated.put(this.toString(), true);
+        if(copy) {
+            this.goalValue = goalValue;
+            this.repeatedStates = new Hashtable<>(repeated);
+        } else {
+            repeated.put(this.toString(), true);
+            this.repeatedStates = new Hashtable<>(repeated);
+
+            if (currentCell.getOperationType() == OPERATION_TYPE.DECREASE_GOAL)
+                goalValue -= currentCell.getValue();
+
+            if (currentCell.getOperationType() == OPERATION_TYPE.INCREASE_GOAL)
+                goalValue += currentCell.getValue();
+
+            this.goalValue = goalValue;
+        }
     }
 
+    public static Node create(Cell currentCell, int currentValue, int goalValue, Board board, Node parent, Hashtable<String, Boolean> repeated) {
+        return new Node(currentCell, currentValue, goalValue, board, parent, repeated, false);
+    }
+
+    public static Node copy(Node node) {
+        return new Node(node.currentCell, node.sum, node.goalValue, node.board, node.parent, new Hashtable<>(node.repeatedStates), true);
+    }
 
     public ArrayList<Node> successor() {
         ArrayList<Node> result = new ArrayList<Node>();
@@ -38,7 +54,7 @@ public class Node {
             Cell rightCell = this.cells[this.currentCell.row][this.currentCell.col + 1];
             if (isValidMove(rightCell)) {
                 int calculatedValue = calculate(rightCell);
-                Node rightNode = new Node(rightCell, calculatedValue, goalValue, board, this, repeatedStates);
+                Node rightNode = Node.create(rightCell, calculatedValue, goalValue, board, this, repeatedStates);
                 result.add(rightNode);
             }
         }
@@ -46,7 +62,7 @@ public class Node {
             Cell leftCell = this.cells[this.currentCell.row][this.currentCell.col - 1];
             if (isValidMove(leftCell)) {
                 int calculatedValue = calculate(leftCell);
-                Node leftNode = new Node(leftCell, calculatedValue, goalValue, board, this, repeatedStates);
+                Node leftNode = Node.create(leftCell, calculatedValue, goalValue, board, this, repeatedStates);
                 result.add(leftNode);
             }
         }
@@ -54,7 +70,7 @@ public class Node {
             Cell downCell = this.cells[this.currentCell.row + 1][this.currentCell.col];
             if (isValidMove(downCell)) {
                 int calculatedValue = calculate(downCell);
-                Node downNode = new Node(downCell, calculatedValue, goalValue, board, this, repeatedStates);
+                Node downNode = Node.create(downCell, calculatedValue, goalValue, board, this, repeatedStates);
                 result.add(downNode);
             }
 
@@ -63,7 +79,7 @@ public class Node {
             Cell upCell = this.cells[this.currentCell.row - 1][this.currentCell.col];
             if (isValidMove(upCell)) {
                 int calculatedValue = calculate(upCell);
-                Node upNode = new Node(upCell, calculatedValue, goalValue, board, this, repeatedStates);
+                Node upNode = Node.create(upCell, calculatedValue, goalValue, board, this, repeatedStates);
                 result.add(upNode);
             }
         }
@@ -178,13 +194,6 @@ public class Node {
         }
         System.out.println("-----------------------------------------");
 
-    }
-
-    private void setGoalValue() {
-        if (currentCell.getOperationType() == OPERATION_TYPE.DECREASE_GOAL)
-            goalValue -= currentCell.getValue();
-        if (currentCell.getOperationType() == OPERATION_TYPE.INCREASE_GOAL)
-            goalValue += currentCell.getValue();
     }
 
     private String spaceRequired(Cell cell) {

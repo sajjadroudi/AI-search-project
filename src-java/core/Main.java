@@ -1,8 +1,6 @@
 package core;
 
-import AI.BFS;
-import AI.DFS;
-import AI.SearchAlgo;
+import AI.*;
 import model.Board;
 import model.Cell;
 import model.Node;
@@ -30,9 +28,17 @@ public class Main {
         Board gameBoard = mapper.createBoard(cells, rows, columns);
         Hashtable<String, Boolean> initHash = new Hashtable<>();
         initHash.put(Cell.getStart().toString(), true);
-        Node start = new Node(Cell.getStart(), Cell.getStart().getValue(), Cell.getGoal().getValue(), gameBoard, null, initHash);
+        Node start = Node.create(Cell.getStart(), Cell.getStart().getValue(), Cell.getGoal().getValue(), gameBoard, null, initHash);
 
-        SearchAlgo algo = new DFS();
-        algo.search(start);
+        solve(start);
     }
+
+    private static void solve(Node startNode) {
+        SearchAlgo algo = new IDS();
+        SearchResult result = algo.search(startNode);
+        System.out.println("find solution: " + result.isSuccessful());
+        System.out.println("depth: " + result.getDepth());
+        System.out.println("path: " + result.getFormattedPath());
+    }
+
 }
