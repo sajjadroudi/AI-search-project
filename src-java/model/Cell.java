@@ -1,8 +1,8 @@
 package model;
 
 public class Cell {
-    int i;
-    int j;
+    int row;
+    int col;
     private int value;
     private OPERATION_TYPE operationType;
     public String op;
@@ -10,8 +10,8 @@ public class Cell {
     private static Cell goal;
 
     public Cell(int i, int j, int value, String op) {
-        this.i = i;
-        this.j = j;
+        this.row = i;
+        this.col = j;
         this.op = op;
         this.value = value;
         this.operationType = OPERATION_TYPE.getOperation(op);
@@ -37,6 +37,6 @@ public class Cell {
 
     @Override
     public String toString() {
-        return "(" + this.i + "," + this.j + ")";
+        return "(" + this.row + "," + this.col + ")";
     }
 }

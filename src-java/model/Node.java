@@ -3,7 +3,9 @@ package model;
 import core.Constants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.Objects;
 
 public class Node {
     public Board board;
@@ -33,7 +35,7 @@ public class Node {
     public ArrayList<Node> successor() {
         ArrayList<Node> result = new ArrayList<Node>();
         if (canMoveRight()) {
-            Cell rightCell = this.cells[this.currentCell.i][this.currentCell.j + 1];
+            Cell rightCell = this.cells[this.currentCell.row][this.currentCell.col + 1];
             if (isValidMove(rightCell)) {
                 int calculatedValue = calculate(rightCell);
                 Node rightNode = new Node(rightCell, calculatedValue, goalValue, board, this, repeatedStates);
@@ -41,7 +43,7 @@ public class Node {
             }
         }
         if (canMoveLeft()) {
-            Cell leftCell = this.cells[this.currentCell.i][this.currentCell.j - 1];
+            Cell leftCell = this.cells[this.currentCell.row][this.currentCell.col - 1];
             if (isValidMove(leftCell)) {
                 int calculatedValue = calculate(leftCell);
                 Node leftNode = new Node(leftCell, calculatedValue, goalValue, board, this, repeatedStates);
@@ -49,7 +51,7 @@ public class Node {
             }
         }
         if (canMoveDown()) {
-            Cell downCell = this.cells[this.currentCell.i + 1][this.currentCell.j];
+            Cell downCell = this.cells[this.currentCell.row + 1][this.currentCell.col];
             if (isValidMove(downCell)) {
                 int calculatedValue = calculate(downCell);
                 Node downNode = new Node(downCell, calculatedValue, goalValue, board, this, repeatedStates);
@@ -58,7 +60,7 @@ public class Node {
 
         }
         if (canMoveUp()) {
-            Cell upCell = this.cells[this.currentCell.i - 1][this.currentCell.j];
+            Cell upCell = this.cells[this.currentCell.row - 1][this.currentCell.col];
             if (isValidMove(upCell)) {
                 int calculatedValue = calculate(upCell);
                 Node upNode = new Node(upCell, calculatedValue, goalValue, board, this, repeatedStates);
@@ -93,19 +95,19 @@ public class Node {
     }
 
     private boolean canMoveRight() {
-        return this.currentCell.j < this.board.getRow() - 1;
+        return this.currentCell.col < this.board.getRow() - 1;
     }
 
     private boolean canMoveLeft() {
-        return this.currentCell.j > 0;
+        return this.currentCell.col > 0;
     }
 
     private boolean canMoveUp() {
-        return this.currentCell.i > 0;
+        return this.currentCell.row > 0;
     }
 
     private boolean canMoveDown() {
-        return this.currentCell.i < this.board.getCol() - 1;
+        return this.currentCell.row < this.board.getCol() - 1;
     }
 
     private Boolean isValidMove(Cell destCell) {
@@ -138,9 +140,9 @@ public class Node {
     public String hash() {
         StringBuilder hash = new StringBuilder();
         hash.append("i:")
-                .append(currentCell.i)
+                .append(currentCell.row)
                 .append("j:")
-                .append(currentCell.j)
+                .append(currentCell.col)
                 .append("sum:")
                 .append(sum)
                 .append("op:")
@@ -162,7 +164,7 @@ public class Node {
                     );
                     continue;
                 }
-                if (currentCell.j == j && currentCell.i == i) {
+                if (currentCell.col == j && currentCell.row == i) {
                     System.out.print(Constants.ANSI_BRIGHT_GREEN + Constants.PLAYER + sum + spaceRequired(cells[i][j]));
                 } else {
                     System.out.print(Constants.ANSI_BRIGHT_GREEN +
@@ -196,6 +198,19 @@ public class Node {
 
     @Override
     public String toString() {
-        return "(" + this.currentCell.i + "," + this.currentCell.j + ")";
+        return "(" + this.currentCell.row + "," + this.currentCell.col + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node node = (Node) o;
+        return node.toString().equals(toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

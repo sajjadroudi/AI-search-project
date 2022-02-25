@@ -3,6 +3,7 @@ package model;
 import core.Constants;
 
 public class Board {
+
     private int row;
     private int col;
     private Cell[][] cells;
@@ -11,7 +12,6 @@ public class Board {
         this.row = row;
         this.col = col;
         this.cells = cells;
-
     }
 
     public int getCol() {
