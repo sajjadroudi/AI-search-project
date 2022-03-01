@@ -4,13 +4,17 @@ import model.Node;
 
 public class IDS extends SearchAlgo {
 
+    public IDS(Node startNode) {
+        super(startNode);
+    }
+
     @Override
-    public SearchResult search(Node startNode) {
-        DFS dfs = new DFS();
+    public SearchResult search() {
+        DFS dfs = new DFS(Node.copy(this.startNode));
         int lastMaxTraversedDepth = -1;
-        int i = 0;
+        int depth = 0;
         while(true) {
-            SearchResult result = dfs.search(Node.copy(startNode), i);
+            SearchResult result = dfs.search(depth);
 
             if(result.isSuccessful())
                 return result;
@@ -20,7 +24,7 @@ public class IDS extends SearchAlgo {
 
             lastMaxTraversedDepth = result.getMaxDepthTraversed();
 
-            i++;
+            depth++;
         }
     }
 

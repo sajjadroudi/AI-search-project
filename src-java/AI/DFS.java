@@ -7,12 +7,18 @@ import java.util.*;
 
 public class DFS extends SearchAlgo {
 
-    @Override
-    public SearchResult search(Node startNode) {
-        return search(startNode, Integer.MAX_VALUE);
+    public DFS(Node startNode) {
+        super(startNode);
     }
 
-    public SearchResult search(Node startNode, final int maxDepth) {
+    @Override
+    public SearchResult search() {
+        return search(Integer.MAX_VALUE);
+    }
+
+    public SearchResult search(final int maxDepth) {
+        Node startNode = Node.copy(this.startNode);
+
         Stack<Node> fringe = new Stack<>();
         Map<Node, Integer> nodeDepths = new HashMap<>();
 

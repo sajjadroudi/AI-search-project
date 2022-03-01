@@ -27,15 +27,16 @@ public class Main {
         Cell[][] cells = mapper.createCells(board, rows, columns);
         Board gameBoard = mapper.createBoard(cells, rows, columns);
         Hashtable<String, Boolean> initHash = new Hashtable<>();
-        initHash.put(Cell.getStart().toString(), true);
-        Node start = Node.create(Cell.getStart(), Cell.getStart().getValue(), Cell.getGoal().getValue(), gameBoard, null, initHash);
+        initHash.put(gameBoard.getStart().toString(), true);
+        Node start = Node.create(gameBoard.getStart(), gameBoard.getStart().getValue(), gameBoard.getGoal().getValue(), gameBoard, null, initHash);
 
-        solve(start);
+        solve(gameBoard, start);
     }
 
-    private static void solve(Node startNode) {
-        SearchAlgo algo = new IDS();
-        SearchResult result = algo.search(startNode);
+    private static void solve(Board board, Node startNode) {
+//        SearchAlgo algo = new BFS(startNode);
+        SearchAlgo algo = new BDS(board);
+        SearchResult result = algo.search();
         System.out.println("find solution: " + result.isSuccessful());
         System.out.println("depth: " + result.getDepth());
         System.out.println("path: " + result.getFormattedPath());

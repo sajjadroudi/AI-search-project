@@ -8,7 +8,15 @@ import java.util.List;
 
 public abstract class SearchAlgo {
 
-    public abstract SearchResult search(Node startNode);
+    protected Node startNode;
+
+    public SearchAlgo(Node startNode) {
+        this.startNode = Node.copy(startNode);
+    }
+
+    public SearchAlgo() {}
+
+    public abstract SearchResult search();
 
     public void printResult(Node node, int depthCounter) {
         if (node.parent == null) {
@@ -22,14 +30,20 @@ public abstract class SearchAlgo {
     }
 
     public SearchResult buildResult(Node goalNode) {
+        return SearchResult.success(buildPath(goalNode));
+    }
+
+    protected List<Node> buildPath(Node endNode) {
         List<Node> path = new ArrayList<>();
-        Node node = goalNode;
-        for(int depth = 0; node.parent != null; depth++) {
+        Node node = endNode;
+        while(node.parent != null) {
             path.add(node);
             node = node.parent;
         }
+        path.add(node);
+
         Collections.reverse(path);
-        return SearchResult.success(path);
+        return path;
     }
 
 }

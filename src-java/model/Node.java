@@ -3,9 +3,8 @@ package model;
 import core.Constants;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
-import java.util.Objects;
+import java.util.List;
 
 public class Node {
     public final Board board;
@@ -48,7 +47,7 @@ public class Node {
         return new Node(node.currentCell, node.sum, node.goalValue, node.board, node.parent, new Hashtable<>(node.repeatedStates), true);
     }
 
-    public ArrayList<Node> successor() {
+    public List<Node> successor() {
         ArrayList<Node> result = new ArrayList<Node>();
         if (canMoveRight()) {
             Cell rightCell = this.cells[this.currentCell.row][this.currentCell.col + 1];
@@ -87,11 +86,10 @@ public class Node {
     }
 
     private boolean canEnterGoal(Cell downCell) {
-        if (downCell != Cell.getGoal()) return true;
+        if (downCell != board.getGoal()) return true;
         else {
             return sum >= goalValue;
         }
-
     }
 
 
@@ -127,7 +125,7 @@ public class Node {
     }
 
     private Boolean isValidMove(Cell destCell) {
-        return destCell != Cell.getStart() && canEnterGoal(destCell) && !isWall(destCell) && !repeatedStates.containsKey(destCell.toString());
+        return destCell != board.getStart() && canEnterGoal(destCell) && !isWall(destCell) && !repeatedStates.containsKey(destCell.toString());
     }
 
     public boolean isGoal() {
