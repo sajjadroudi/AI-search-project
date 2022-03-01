@@ -36,6 +36,7 @@ public class Main {
     private static void solve(Board board, Node startNode) {
 //        SearchAlgo algo = new BFS(startNode);
         SearchAlgo algo = new BDS(board);
+
         SearchResult result = algo.search();
         System.out.println("find solution: " + result.isSuccessful());
         System.out.println("depth: " + result.getDepth());

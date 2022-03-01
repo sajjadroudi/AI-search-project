@@ -6,7 +6,7 @@ import java.util.List;
 
 public class SearchResult {
 
-    private List<Node> path;
+    private final List<Node> path;
     private int maxDepthTraversed = -1;
 
     private SearchResult(List<Node> path) {

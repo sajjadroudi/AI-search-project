@@ -7,45 +7,38 @@ import java.util.*;
 
 public class BDS extends SearchAlgo {
 
-    private final Node startForwardNode;
-    private final Node startBackwardNode;
+    private final Node start;
+    private final Node goal;
 
     public BDS(Board board) {
-        Hashtable<String, Boolean> initHash = new Hashtable<>();
-        initHash.put(board.getStart().toString(), true);
-        startForwardNode = Node.create(board.getStart(), board.getStart().getValue(), board.getGoal().getValue(), board, null, initHash);
+        start = Node.create(board.getStart(), board.getStart().getValue(), board.getGoal().getValue(), board, null);
 
         Board reverseBoard = board.reverse();
-        Hashtable<String, Boolean> initHash2 = new Hashtable<>();
-        initHash2.put(reverseBoard.getStart().toString(), true);
-        startBackwardNode = Node.create(reverseBoard.getStart(), reverseBoard.getStart().getValue(), reverseBoard.getGoal().getValue(), reverseBoard, null, initHash2);
+        goal = Node.create(reverseBoard.getStart(), reverseBoard.getStart().getValue(), reverseBoard.getGoal().getValue(), reverseBoard, null);
     }
 
     @Override
     public SearchResult search() {
-        BFS startSide = new BFS(startForwardNode);
-        BFS goalSide = new BFS(startBackwardNode);
-
         Set<Node> visitedNodes = new HashSet<>();
 
         Queue<Node> startSideFringe = new LinkedList<>();
-        startSideFringe.add(startForwardNode);
+        startSideFringe.add(start);
 
         Queue<Node> goalSideFringe = new LinkedList<>();
-        goalSideFringe.add(startBackwardNode);
+        goalSideFringe.add(this.goal);
 
         while(!startSideFringe.isEmpty() && !goalSideFringe.isEmpty()) {
-            var result = checkIfFinished(startSideFringe, goalSideFringe, startBackwardNode);
+            var result = getResultIfFinished(startSideFringe, goalSideFringe, goal);
             if(result != null)
                 return result;
 
-            startSide.searchOneDepth(startSideFringe, visitedNodes);
-            result = checkIfFinished(startSideFringe, goalSideFringe, startBackwardNode);
+            searchOneDepth(startSideFringe, visitedNodes);
+            result = getResultIfFinished(startSideFringe, goalSideFringe, goal);
             if(result != null)
                 return result;
 
-            goalSide.searchOneDepth(goalSideFringe, visitedNodes);
-            result = checkIfFinished(startSideFringe, goalSideFringe, startBackwardNode);
+            searchOneDepth(goalSideFringe, visitedNodes);
+            result = getResultIfFinished(startSideFringe, goalSideFringe, goal);
             if(result != null)
                 return result;
         }
@@ -53,8 +46,30 @@ public class BDS extends SearchAlgo {
         return SearchResult.failure();
     }
 
-    private SearchResult checkIfFinished(Collection<Node> startSideFringe, Collection<Node> goalSideFringe, Node goal) {
-        Node common = getCommonItem(startSideFringe, goalSideFringe);
+    private void searchOneDepth(Queue<Node> fringe, Set<Node> visitedNodes) {
+        if(fringe.isEmpty())
+            return;
+
+        Node current = fringe.poll();
+        while(visitedNodes.contains(current)) {
+            current = fringe.poll();
+        }
+
+        if(current == null)
+            return;
+
+        visitedNodes.add(current);
+
+        List<Node> children = current.successor();
+        for(Node child : children) {
+            if(!fringe.contains(child) && !visitedNodes.contains(child)) {
+                fringe.add(child);
+            }
+        }
+    }
+
+    private SearchResult getResultIfFinished(Collection<Node> startSideFringe, Collection<Node> goalSideFringe, Node goal) {
+        Node common = getCommonNode(startSideFringe, goalSideFringe);
         if(common != null) {
             List<Node> path = buildWholePath(startSideFringe, goalSideFringe);
             if(isSolutionFound(path, goal)) {
@@ -65,7 +80,7 @@ public class BDS extends SearchAlgo {
         return null;
     }
 
-    private Node getCommonItem(Collection<Node> first, Collection<Node> second) {
+    private Node getCommonNode(Collection<Node> first, Collection<Node> second) {
         return first.stream()
                 .filter(second::contains)
                 .findFirst()
@@ -73,18 +88,19 @@ public class BDS extends SearchAlgo {
     }
 
     private List<Node> buildWholePath(Collection<Node> first, Collection<Node> second) {
-        Node firstNode = getCommonItem(first, second);
-        Node secondNode = getCommonItem(second, first);
+        Node firstNode = getCommonNode(first, second);
+        Node secondNode = getCommonNode(second, first);
 
-        List<Node> result = new ArrayList<>(buildPath(firstNode));
+        List<Node> firstHalfPath = buildPath(firstNode);
+        List<Node> wholePath = new ArrayList<>(firstHalfPath);
 
-        List<Node> secondPath = buildPath(secondNode);
-        secondPath.remove(secondNode);
-        Collections.reverse(secondPath);
+        List<Node> secondHalfPath = buildPath(secondNode);
+        secondHalfPath.remove(secondNode); // Remove repetitive existing in the first half
+        Collections.reverse(secondHalfPath); // Because we have traversed reverse board :)
 
-        result.addAll(secondPath);
+        wholePath.addAll(secondHalfPath);
 
-        return result;
+        return wholePath;
     }
 
     private boolean isSolutionFound(List<Node> path, Node goal) {

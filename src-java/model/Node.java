@@ -43,6 +43,10 @@ public class Node {
         return new Node(currentCell, currentValue, goalValue, board, parent, repeated, false);
     }
 
+    public static Node create(Cell currentCell, int currentValue, int goalValue, Board board, Node parent) {
+        return new Node(currentCell, currentValue, goalValue, board, parent, new Hashtable<>(), false);
+    }
+
     public static Node copy(Node node) {
         return new Node(node.currentCell, node.sum, node.goalValue, node.board, node.parent, new Hashtable<>(node.repeatedStates), true);
     }

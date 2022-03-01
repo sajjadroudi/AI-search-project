@@ -7,8 +7,10 @@ import java.util.*;
 
 public class DFS extends SearchAlgo {
 
+    private final Node startNode;
+
     public DFS(Node startNode) {
-        super(startNode);
+        this.startNode = Node.copy(startNode);
     }
 
     @Override

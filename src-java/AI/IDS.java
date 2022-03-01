@@ -4,8 +4,10 @@ import model.Node;
 
 public class IDS extends SearchAlgo {
 
+    private Node startNode;
+
     public IDS(Node startNode) {
-        super(startNode);
+        this.startNode = startNode;
     }
 
     @Override

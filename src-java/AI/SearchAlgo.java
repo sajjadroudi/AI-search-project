@@ -8,14 +8,6 @@ import java.util.List;
 
 public abstract class SearchAlgo {
 
-    protected Node startNode;
-
-    public SearchAlgo(Node startNode) {
-        this.startNode = Node.copy(startNode);
-    }
-
-    public SearchAlgo() {}
-
     public abstract SearchResult search();
 
     public void printResult(Node node, int depthCounter) {
