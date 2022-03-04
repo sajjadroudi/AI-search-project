@@ -26,8 +26,8 @@ public class Node {
             this.goalValue = goalValue;
             this.repeatedStates = new Hashtable<>(repeated);
         } else {
-            repeated.put(this.toString(), true);
             this.repeatedStates = new Hashtable<>(repeated);
+            this.repeatedStates.put(this.toString(), true);
 
             if (currentCell.getOperationType() == OPERATION_TYPE.DECREASE_GOAL)
                 goalValue -= currentCell.getValue();
@@ -217,11 +217,11 @@ public class Node {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
-        return node.toString().equals(toString());
+        return node.hash().equals(hash());
     }
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return hash().hashCode();
     }
 }
