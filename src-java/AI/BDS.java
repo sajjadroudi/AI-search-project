@@ -25,7 +25,7 @@ public class BDS extends SearchAlgo {
         startSideFringe.add(start);
 
         Queue<Node> goalSideFringe = new LinkedList<>();
-        goalSideFringe.add(this.goal);
+        goalSideFringe.add(goal);
 
         while(!startSideFringe.isEmpty() && !goalSideFringe.isEmpty()) {
             var result = getResultIfFinished(startSideFringe, goalSideFringe, goal);
@@ -51,13 +51,6 @@ public class BDS extends SearchAlgo {
             return;
 
         Node current = fringe.poll();
-        while(visitedNodes.contains(current)) {
-            current = fringe.poll();
-        }
-
-        if(current == null)
-            return;
-
         visitedNodes.add(current);
 
         List<Node> children = current.successor();
@@ -69,46 +62,56 @@ public class BDS extends SearchAlgo {
     }
 
     private SearchResult getResultIfFinished(Collection<Node> startSideFringe, Collection<Node> goalSideFringe, Node goal) {
-        Node common = getCommonNode(startSideFringe, goalSideFringe);
-        if(common != null) {
-            List<Node> path = buildWholePath(startSideFringe, goalSideFringe);
-            if(isSolutionFound(path, goal)) {
-                return SearchResult.success(path);
+        for(Node startSideNode : startSideFringe) {
+            for(Node goalSideNode : goalSideFringe) {
+                if(startSideNode.equalsCoordinates(goalSideNode)) {
+                    List<Node> path = buildWholePathIfValid(startSideNode, goalSideNode);
+                    if(isSolutionFound(path, goal)) {
+                        return SearchResult.success(path);
+                    }
+                }
             }
         }
 
         return null;
     }
 
-    private Node getCommonNode(Collection<Node> first, Collection<Node> second) {
-        return first.stream()
-                .filter(second::contains)
-                .findFirst()
-                .orElse(null);
-    }
+    private List<Node> buildWholePathIfValid(Node startSideNode, Node goalSideNode) {
+        List<Node> firstHalfPath = buildPath(startSideNode);
 
-    private List<Node> buildWholePath(Collection<Node> first, Collection<Node> second) {
-        Node firstNode = getCommonNode(first, second);
-        Node secondNode = getCommonNode(second, first);
-
-        List<Node> firstHalfPath = buildPath(firstNode);
-        List<Node> wholePath = new ArrayList<>(firstHalfPath);
-
-        List<Node> secondHalfPath = buildPath(secondNode);
-        secondHalfPath.remove(secondNode); // Remove repetitive existing in the first half
+        List<Node> secondHalfPath = buildPath(goalSideNode);
+        secondHalfPath.remove(goalSideNode); // This node already exists in the first half
         Collections.reverse(secondHalfPath); // Because we have traversed reverse board :)
 
+        List<Node> wholePath = new ArrayList<>(firstHalfPath);
         wholePath.addAll(secondHalfPath);
+
+        var isPathInvalid = hasAnyNodeInCommon(firstHalfPath, secondHalfPath);
+        if(isPathInvalid) return null;
 
         return wholePath;
     }
 
+    private boolean hasAnyNodeInCommon(Collection<Node> first, Collection<Node> second) {
+        for(Node firstNode : first) {
+            for(Node secondNode : second) {
+                if(firstNode.equalsCoordinates(secondNode))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
     private boolean isSolutionFound(List<Node> path, Node goal) {
+        if(path == null)
+            return false;
+
         int goalScore = goal.currentCell.getValue();
         int currentScore = 0;
 
         for(Node node : path) {
-            if(node.equals(goal))
+            if(node.equalsCoordinates(goal))
                 break;
 
             int value = node.currentCell.getValue();

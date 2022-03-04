@@ -34,6 +34,7 @@ public class Main {
     }
 
     private static void solve(Board board, Node startNode) {
+//        SearchAlgo algo = new IDS(startNode);
 //        SearchAlgo algo = new BFS(startNode);
         SearchAlgo algo = new BDS(board);
 

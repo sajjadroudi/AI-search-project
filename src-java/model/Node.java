@@ -212,6 +212,10 @@ public class Node {
         return "(" + this.currentCell.row + "," + this.currentCell.col + ")";
     }
 
+    public boolean equalsCoordinates(Node node) {
+        return currentCell.row == node.currentCell.row && currentCell.col == node.currentCell.col;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
