@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Node {
     public final Board board;
-    public final int sum;
+    protected final int sum;
     public final Node parent;
     public final Cell currentCell;
     private final Cell[][] cells;
@@ -39,16 +39,16 @@ public class Node {
         }
     }
 
-    public static Node create(Cell currentCell, int currentValue, int goalValue, Board board, Node parent, Hashtable<String, Boolean> repeated) {
-        return new Node(currentCell, currentValue, goalValue, board, parent, repeated, false);
+    public Node(Cell currentCell, int currentValue, int goalValue, Board board, Node parent, Hashtable<String, Boolean> repeated) {
+        this(currentCell, currentValue, goalValue, board, parent, repeated, false);
     }
 
-    public static Node create(Cell currentCell, int currentValue, int goalValue, Board board, Node parent) {
-        return new Node(currentCell, currentValue, goalValue, board, parent, new Hashtable<>(), false);
+    public Node(Cell currentCell, int currentValue, int goalValue, Board board, Node parent) {
+        this(currentCell, currentValue, goalValue, board, parent, new Hashtable<>(), false);
     }
 
-    public static Node copy(Node node) {
-        return new Node(node.currentCell, node.sum, node.goalValue, node.board, node.parent, new Hashtable<>(node.repeatedStates), true);
+    public Node(Node node) {
+        this(node.currentCell, node.sum, node.goalValue, node.board, node.parent, new Hashtable<>(node.repeatedStates), true);
     }
 
     public List<Node> successor() {
@@ -57,7 +57,7 @@ public class Node {
             Cell rightCell = this.cells[this.currentCell.row][this.currentCell.col + 1];
             if (isValidMove(rightCell)) {
                 int calculatedValue = calculate(rightCell);
-                Node rightNode = Node.create(rightCell, calculatedValue, goalValue, board, this, repeatedStates);
+                Node rightNode = new Node(rightCell, calculatedValue, goalValue, board, this, repeatedStates);
                 result.add(rightNode);
             }
         }
@@ -65,7 +65,7 @@ public class Node {
             Cell leftCell = this.cells[this.currentCell.row][this.currentCell.col - 1];
             if (isValidMove(leftCell)) {
                 int calculatedValue = calculate(leftCell);
-                Node leftNode = Node.create(leftCell, calculatedValue, goalValue, board, this, repeatedStates);
+                Node leftNode = new Node(leftCell, calculatedValue, goalValue, board, this, repeatedStates);
                 result.add(leftNode);
             }
         }
@@ -73,7 +73,7 @@ public class Node {
             Cell downCell = this.cells[this.currentCell.row + 1][this.currentCell.col];
             if (isValidMove(downCell)) {
                 int calculatedValue = calculate(downCell);
-                Node downNode = Node.create(downCell, calculatedValue, goalValue, board, this, repeatedStates);
+                Node downNode = new Node(downCell, calculatedValue, goalValue, board, this, repeatedStates);
                 result.add(downNode);
             }
 
@@ -82,7 +82,7 @@ public class Node {
             Cell upCell = this.cells[this.currentCell.row - 1][this.currentCell.col];
             if (isValidMove(upCell)) {
                 int calculatedValue = calculate(upCell);
-                Node upNode = Node.create(upCell, calculatedValue, goalValue, board, this, repeatedStates);
+                Node upNode = new Node(upCell, calculatedValue, goalValue, board, this, repeatedStates);
                 result.add(upNode);
             }
         }
@@ -139,22 +139,6 @@ public class Node {
         return false;
     }
 
-    public int pathCost() {
-        return switch (currentCell.getOperationType()) {
-            case MINUS, DECREASE_GOAL -> 1;
-            case ADD, INCREASE_GOAL -> 2;
-            case MULT -> 3;
-            case POW -> 4;
-            default -> 0;
-        };
-
-    }
-
-    private int heuristic() {
-        // TODO: 2/16/2022 implement heuristic function
-        return 0;
-    }
-
     public String hash() {
         StringBuilder hash = new StringBuilder();
         hash.append("i:")
@@ -196,6 +180,16 @@ public class Node {
         }
         System.out.println("-----------------------------------------");
 
+    }
+
+    public int pathCost() {
+        return switch (currentCell.getOperationType()) {
+            case MINUS, DECREASE_GOAL, GOAL -> 1;
+            case ADD, INCREASE_GOAL -> 2;
+            case MULT -> 5;
+            case POW -> 11;
+            default -> 0;
+        };
     }
 
     private String spaceRequired(Cell cell) {

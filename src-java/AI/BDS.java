@@ -11,10 +11,10 @@ public class BDS extends SearchAlgo {
     private final Node goal;
 
     public BDS(Board board) {
-        start = Node.create(board.getStart(), board.getStart().getValue(), board.getGoal().getValue(), board, null);
+        start = new Node(board.getStart(), board.getStart().getValue(), board.getGoal().getValue(), board, null);
 
         Board reverseBoard = board.reverse();
-        goal = Node.create(reverseBoard.getStart(), reverseBoard.getStart().getValue(), reverseBoard.getGoal().getValue(), reverseBoard, null);
+        goal = new Node(reverseBoard.getStart(), reverseBoard.getStart().getValue(), reverseBoard.getGoal().getValue(), reverseBoard, null);
     }
 
     @Override

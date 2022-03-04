@@ -1,6 +1,5 @@
 package AI;
 
-import core.Constants;
 import model.Node;
 
 import java.util.*;
@@ -10,7 +9,7 @@ public class DFS extends SearchAlgo {
     private final Node startNode;
 
     public DFS(Node startNode) {
-        this.startNode = Node.copy(startNode);
+        this.startNode = new Node(startNode);
     }
 
     @Override
@@ -19,7 +18,7 @@ public class DFS extends SearchAlgo {
     }
 
     public SearchResult search(final int maxDepth) {
-        Node startNode = Node.copy(this.startNode);
+        Node startNode = new Node(this.startNode);
 
         Stack<Node> fringe = new Stack<>();
         Map<Node, Integer> nodeDepths = new HashMap<>();

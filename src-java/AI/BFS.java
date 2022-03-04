@@ -1,6 +1,5 @@
 package AI;
 
-import model.Board;
 import model.Node;
 
 import java.util.*;
@@ -10,7 +9,7 @@ public class BFS extends SearchAlgo {
     private final Node start;
 
     public BFS(Node startNode) {
-        start = Node.copy(startNode);
+        start = new Node(startNode);
     }
 
     @Override
@@ -19,7 +18,7 @@ public class BFS extends SearchAlgo {
     }
 
     public SearchResult search(int maxDepth) {
-        Node startNode = Node.copy(this.start);
+        Node startNode = new Node(this.start);
 
         Queue<Node> fringe = new LinkedList<>();
         Set<Node> visitedNodes = new HashSet<>();

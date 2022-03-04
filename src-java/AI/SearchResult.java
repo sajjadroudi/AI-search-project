@@ -42,7 +42,7 @@ public class SearchResult {
         if(!isSuccessful())
             return -1;
 
-        return path.size();
+        return path.size() - 1;
     }
 
     public void setMaxDepthTraversed(int maxDepthTraversed) {

@@ -28,7 +28,7 @@ public class Main {
         Board gameBoard = mapper.createBoard(cells, rows, columns);
         Hashtable<String, Boolean> initHash = new Hashtable<>();
         initHash.put(gameBoard.getStart().toString(), true);
-        Node start = Node.create(gameBoard.getStart(), gameBoard.getStart().getValue(), gameBoard.getGoal().getValue(), gameBoard, null, initHash);
+        Node start = new Node(gameBoard.getStart(), gameBoard.getStart().getValue(), gameBoard.getGoal().getValue(), gameBoard, null, initHash);
 
         solve(gameBoard, start);
     }
@@ -36,12 +36,17 @@ public class Main {
     private static void solve(Board board, Node startNode) {
 //        SearchAlgo algo = new IDS(startNode);
 //        SearchAlgo algo = new BFS(startNode);
-        SearchAlgo algo = new BDS(board);
+        SearchAlgo algo = new AStar(startNode);
+//        SearchAlgo algo = new BDS(board);
 
         SearchResult result = algo.search();
         System.out.println("find solution: " + result.isSuccessful());
         System.out.println("depth: " + result.getDepth());
         System.out.println("path: " + result.getFormattedPath());
+
+        var bfsResult = new BFS(startNode).search();
+        System.out.println("\nbfs depth: " + bfsResult.getDepth());
+        System.out.println("bfs path: " + bfsResult.getFormattedPath());
     }
 
 }

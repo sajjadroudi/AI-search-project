@@ -12,7 +12,7 @@ public class IDS extends SearchAlgo {
 
     @Override
     public SearchResult search() {
-        DFS dfs = new DFS(Node.copy(this.startNode));
+        DFS dfs = new DFS(new Node(this.startNode));
         int lastMaxTraversedDepth = -1;
         int depth = 0;
         while(true) {

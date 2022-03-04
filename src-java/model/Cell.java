@@ -1,8 +1,8 @@
 package model;
 
 public class Cell {
-    final int row;
-    final int col;
+    public final int row;
+    public final int col;
     private final int value;
     private final OPERATION_TYPE operationType;
     public final String op;
