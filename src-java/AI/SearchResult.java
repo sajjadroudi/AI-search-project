@@ -8,6 +8,7 @@ public class SearchResult {
 
     private final List<Node> path;
     private int maxDepthTraversed = -1;
+    private int nextCutOff = -1;
 
     private SearchResult(List<Node> path) {
         this.path = path;
@@ -59,6 +60,14 @@ public class SearchResult {
 
     public static SearchResult success(List<Node> path) {
         return new SearchResult(path);
+    }
+
+    public void setNextCutOff(int nextCutOff) {
+        this.nextCutOff = nextCutOff;
+    }
+
+    public int getNextCutOff() {
+        return nextCutOff;
     }
 
 }
