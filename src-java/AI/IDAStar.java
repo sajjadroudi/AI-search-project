@@ -45,14 +45,15 @@ public class IDAStar extends SearchAlgo {
                 return buildResult(current);
             }
 
-            var f = heuristic(current) + traversedPathCost.get(current);
+            var pathCost = traversedPathCost.get(current);
+            var f = heuristic(current) + pathCost;
             if(f > cutOff) {
                 nextCutOff = Math.min(nextCutOff, f);
             } else {
                 var children = current.successor();
                 for(Node child : children) {
                     fringe.push(child);
-                    traversedPathCost.put(child, traversedPathCost.get(current) + child.pathCost());
+                    traversedPathCost.put(child, pathCost + 1);
                 }
             }
         }
