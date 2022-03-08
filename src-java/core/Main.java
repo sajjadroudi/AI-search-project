@@ -36,9 +36,9 @@ public class Main {
     private static void solve(Board board, Node startNode) {
 //        SearchAlgo algo = new IDS(startNode);
 //        SearchAlgo algo = new BFS(startNode);
-//        SearchAlgo algo = new AStar(startNode);
+        SearchAlgo algo = new AStar(startNode);
 //        SearchAlgo algo = new BDS(board);
-        SearchAlgo algo = new IDAStar(startNode);
+//        SearchAlgo algo = new IDAStar(startNode);
 
         SearchResult result = algo.search();
         System.out.println("find solution: " + result.isSuccessful());

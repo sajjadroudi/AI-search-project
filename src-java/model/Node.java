@@ -184,8 +184,8 @@ public class Node {
 
     public int pathCost() {
         return switch (currentCell.getOperationType()) {
-            case MINUS, DECREASE_GOAL, GOAL -> 1;
-            case ADD, INCREASE_GOAL -> 2;
+            case MINUS, INCREASE_GOAL, GOAL -> 1;
+            case ADD, DECREASE_GOAL -> 2;
             case MULT -> 5;
             case POW -> 11;
             default -> 0;
