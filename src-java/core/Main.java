@@ -41,13 +41,9 @@ public class Main {
 //        SearchAlgo algo = new IDAStar(startNode);
 
         SearchResult result = algo.search();
-        System.out.println("find solution: " + result.isSuccessful());
+        System.out.println("exists solution: " + result.isSuccessful());
         System.out.println("depth: " + result.getDepth());
         System.out.println("path: " + result.getFormattedPath());
-
-        var bfsResult = new BFS(startNode).search();
-        System.out.println("\nbfs depth: " + bfsResult.getDepth());
-        System.out.println("bfs path: " + bfsResult.getFormattedPath());
     }
 
 }

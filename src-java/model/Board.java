@@ -70,7 +70,6 @@ public class Board {
 
     @Override
     public String toString() {
-        //todo needs a refactor
         StringBuilder map = new StringBuilder();
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {

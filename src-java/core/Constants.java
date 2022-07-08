@@ -1,11 +1,11 @@
 package core;
 
 public class Constants {
-    //colors
+    // Colors
     public static final String ANSI_BRIGHT_GREEN = "\u001B[92m";
     public static final String ANSI_BRIGHT_BLUE = "\u001B[94m";
 
-    //objects
+    // Objects
     public static final String WALL = "\uD83E\uDDF1";
     public static final String START = "\uD83D\uDED6";
     public static final String GOAL = "\u2714";
