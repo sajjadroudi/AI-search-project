@@ -1,7 +1,16 @@
 # Search
-A search project using AI search algorithms. Created as a university project for Artificial Intelligence course. Study [project_definition.pdf](https://github.com/sajjadroudi/AI-search-project/blob/master/project_definition.pdf) for more details.
+A search project written in Java using AI search algorithms. Created as a university project for Artificial Intelligence course. Study [project_definition.pdf](https://github.com/sajjadroudi/AI-search-project/blob/master/project_definition.pdf) for more details.
 
-### Sample Input
+## Used AI Search Algorithms
+- A*
+- BDS
+- BFS
+- DFS
+- IDA*
+- IDS
+
+## Sample Input/Output
+### Input
 ```
 6 6
 s1 +9 *1 *1 *1 *1
@@ -11,7 +20,7 @@ s1 +9 *1 *1 *1 *1
 *1 *1 a10 -10 +10 +10
 +10 +10 b10 w0 -10 -100
 ```
-### Sample Output
+### Output
 ```
 exists solution: true
 depth: 12
