@@ -1,5 +1,5 @@
 # Search
-A search project written in Java using AI search algorithms. Created as a university project for Artificial Intelligence course. Study [project_definition.pdf](https://github.com/sajjadroudi/AI-search-project/blob/master/project_definition.pdf) for more details.
+A search project using AI search algorithms written in Java. Created as a university project for Artificial Intelligence course. Study [project_definition.pdf](https://github.com/sajjadroudi/AI-search-project/blob/master/project_definition.pdf) for more details.
 
 ## Used AI Search Algorithms
 - A*
